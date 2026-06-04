@@ -233,7 +233,7 @@ function renderPricing() {
   const plans = document.getElementById('pricing-plans');
   if (plans) plans.innerHTML = DATA.pricing.plans.map(p => `
     <div class="card" style="position:relative;${p.featured ? 'border:2px solid var(--blue-mid);' : ''}">
-      ${p.featured ? `<div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:500;padding:2px 10px;border-radius:20px;background:var(--blue-light);color:var(--blue-dark);white-space:nowrap;">Más vendido</div>` : ''}
+      ${p.featured ? `<div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:500;padding:2px 10px;border-radius:20px;background:var(--blue-light);color:var(--blue-dark);white-space:nowrap;">Más vendido</div>` : ''} 
       <div style="font-size:13px;font-weight:500;margin-bottom:2px;">${p.name}</div>
       <div style="font-size:11px;color:var(--gray-500);margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--gray-200);">${p.target}</div>
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;color:${p.color};line-height:1;margin-bottom:2px;">USD ${p.price.toLocaleString()}<span style="font-size:13px;font-weight:400;color:var(--gray-500);">/mes</span></div>
