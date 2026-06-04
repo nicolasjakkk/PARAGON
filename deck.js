@@ -1,355 +1,301 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PARAGON — Deck del proyecto</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    /* ── SITE HEADER ── */
-    .deck-header {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--white); border-bottom: 1px solid var(--gray-200);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,.06);
-    }
-    .deck-logo { display: flex; align-items: center; gap: 9px; padding: 12px 0; }
-    .deck-logo span { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; }
-    .deck-logo span em { color: var(--blue); font-style: normal; }
-    .deck-back { font-size: 12px; color: var(--gray-500); display: flex; align-items: center; gap: 5px; }
-    .deck-back:hover { color: var(--blue); }
+/* ═══════════════════════════════════════
+   PARAGON — Deck logic
+   ═══════════════════════════════════════ */
 
-    /* ── MAIN LAYOUT ── */
-    .deck-layout { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 53px); }
-    .deck-sidebar {
-      border-right: 1px solid var(--gray-200);
-      background: var(--gray-50);
-      padding: 1rem 0;
-      position: sticky; top: 53px; height: calc(100vh - 53px); overflow-y: auto;
-    }
-    .deck-main { padding: 1.75rem; max-width: 760px; }
-
-    /* ── SIDEBAR NAV ── */
-    .sidebar-section { margin-bottom: 1.25rem; }
-    .sidebar-section-lbl { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--gray-500); padding: 0 1rem .4rem; }
-    .sidebar-link {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; font-weight: 400; color: var(--gray-500);
-      padding: 7px 1rem; border-left: 2px solid transparent;
-      transition: all .12s; cursor: pointer; background: none; border-right: none; border-top: none; border-bottom: none; width: 100%; text-align: left;
-    }
-    .sidebar-link i { font-size: 15px; flex-shrink: 0; }
-    .sidebar-link:hover { color: var(--gray-900); background: var(--gray-100); }
-    .sidebar-link.active { color: var(--blue); border-left-color: var(--blue); background: var(--blue-light); font-weight: 500; }
-
-    /* ── DECK SECTIONS ── */
-    .deck-section { display: none; }
-    .deck-section.active { display: block; animation: fadeup .18s ease; }
-    @keyframes fadeup { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-    .deck-section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; margin-bottom: 1.1rem; }
-
-    /* ── HERO SECTION ── */
-    .deck-hero {
-      background: var(--gray-50); border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg); padding: 2rem; position: relative; overflow: hidden; margin-bottom: 1.25rem;
-    }
-    .deck-hero-grid {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image: linear-gradient(var(--gray-200) 1px, transparent 1px),
-                        linear-gradient(90deg, var(--gray-200) 1px, transparent 1px);
-      background-size: 28px 28px; opacity: .5;
-    }
-    .deck-hero-inner { position: relative; z-index: 1; }
-    .deck-title { font-family: 'Barlow Condensed', sans-serif; font-size: 52px; font-weight: 700; line-height: 1; margin: 1rem 0 .5rem; }
-    .deck-title span { color: var(--blue); }
-    .deck-stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
-    .dstat-num { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 700; color: var(--blue); line-height: 1; }
-    .dstat-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-500); margin-top: 2px; }
-
-    /* ── PROBLEM ── */
-    #problem-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--gray-200); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
-    #problem-metrics .card { border-radius: 0; border: none; }
-    #problem-symptoms { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
-
-    /* ── MODULES ── */
-    #mod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 9px; margin-bottom: 1.1rem; }
-
-    /* ── ROLES ── */
-    #roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 1px; background: var(--gray-200); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.1rem; }
-    #roles-grid .role-card { border-radius: 0; border: none; }
-
-    /* ── FLOW ── */
-    #flow-steps { display: flex; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.1rem; flex-wrap: wrap; }
-    #flow-steps > div { border-right: 1px solid var(--gray-200); }
-    #flow-steps > div:last-child { border-right: none; }
-    #flow-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 9px; }
-
-    /* ── GANTT ── */
-    .gantt-wrap { overflow-x: auto; }
-    .gantt-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: .85rem; }
-    .gantt-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--gray-500); }
-    .gantt-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-
-    /* ── ROADMAP ── */
-    #roadmap-phases { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-bottom: 1.1rem; }
-
-    /* ── PRICING ── */
-    #pricing-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 11px; margin-bottom: 1rem; }
-    .proj-controls { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
-    .proj-controls label { font-size: 12px; color: var(--gray-500); }
-    .proj-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(115px, 1fr)); gap: 8px; margin-bottom: 1rem; }
-    .proj-metric { background: var(--gray-100); border-radius: var(--radius-md); padding: .8rem; }
-    .proj-metric-lbl { font-size: 11px; color: var(--gray-500); margin-bottom: 3px; }
-    .proj-metric-val { font-size: 17px; font-weight: 500; }
-    .proj-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .proj-table th { text-align: left; padding: 6px 8px; font-weight: 500; font-size: 11px; color: var(--gray-500); border-bottom: 1px solid var(--gray-200); text-transform: uppercase; letter-spacing: .06em; }
-
-    /* ── QUICK LINKS (home) ── */
-    .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
-    .quick-card {
-      background: var(--white); border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg); padding: 1rem; cursor: pointer;
-      transition: background .12s, border-color .12s;
-    }
-    .quick-card:hover { background: var(--gray-50); border-color: var(--blue-mid); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 680px) {
-      .deck-layout { grid-template-columns: 1fr; }
-      .deck-sidebar { display: none; }
-      #roadmap-phases { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-
-<!-- HEADER -->
-<header class="deck-header">
-  <div class="deck-logo">
-    <img src="assets/logo.svg" alt="PARAGON" width="26" height="26">
-    <span>PARA<em>GON</em></span>
-  </div>
-  <a href="index.html" class="deck-back"><i class="ti ti-arrow-left"></i>Volver al inicio</a>
-</header>
-
-<div class="deck-layout">
-
-  <!-- SIDEBAR -->
-  <aside class="deck-sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-section-lbl">Inicio</div>
-      <button class="sidebar-link active" onclick="showSection('s-home')">
-        <i class="ti ti-home"></i>Presentación
-      </button>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-lbl">Contexto</div>
-      <button class="sidebar-link" onclick="showSection('s-problem')">
-        <i class="ti ti-alert-triangle"></i>El problema
-      </button>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-lbl">Plataforma</div>
-      <button class="sidebar-link" onclick="showSection('s-modules')">
-        <i class="ti ti-layout-grid"></i>Módulos
-      </button>
-      <button class="sidebar-link" onclick="showSection('s-roles')">
-        <i class="ti ti-users"></i>Roles
-      </button>
-      <button class="sidebar-link" onclick="showSection('s-flow')">
-        <i class="ti ti-git-pull-request"></i>Flujo aprobación
-      </button>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-lbl">Proyecto</div>
-      <button class="sidebar-link" onclick="showSection('s-gantt')">
-        <i class="ti ti-calendar-stats"></i>Carta Gantt
-      </button>
-      <button class="sidebar-link" onclick="showSection('s-roadmap')">
-        <i class="ti ti-rocket"></i>Roadmap
-      </button>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-lbl">Negocio</div>
-      <button class="sidebar-link" onclick="showSection('s-pricing')">
-        <i class="ti ti-coins"></i>Pricing
-      </button>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="deck-main">
-
-    <!-- HOME -->
-    <div id="s-home" class="deck-section active">
-      <div class="deck-hero">
-        <div class="deck-hero-grid"></div>
-        <div class="deck-hero-inner">
-          <span class="badge badge-blue"><i class="ti ti-industry"></i>Industria papelera · Forestal · Procesos continuos</span>
-          <h1 class="deck-title">PARA<span>GON</span></h1>
-          <p style="font-size:14px;font-weight:300;color:var(--gray-500);line-height:1.6;max-width:420px;">Plataforma integral de transferencia y preservación del conocimiento operacional industrial.</p>
-          <div class="deck-stats">
-            <div><div class="dstat-num">6</div><div class="dstat-lbl">Roles</div></div>
-            <div class="divider"></div>
-            <div><div class="dstat-num">8</div><div class="dstat-lbl">Módulos</div></div>
-            <div class="divider"></div>
-            <div><div class="dstat-num">2</div><div class="dstat-lbl">Etapas</div></div>
-            <div class="divider"></div>
-            <div><div class="dstat-num">10</div><div class="dstat-lbl">Semanas</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="label" style="margin-bottom:.75rem;">Navegar por sección</div>
-      <div class="quick-grid">
-        <div class="quick-card" onclick="showSection('s-problem')">
-          <i class="ti ti-alert-triangle" style="font-size:20px;color:var(--amber);margin-bottom:7px;display:block;"></i>
-          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">El problema</div>
-          <div style="font-size:11px;color:var(--gray-500);">Pérdida de conocimiento crítico</div>
-        </div>
-        <div class="quick-card" onclick="showSection('s-modules')">
-          <i class="ti ti-layout-grid" style="font-size:20px;color:var(--blue);margin-bottom:7px;display:block;"></i>
-          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Módulos</div>
-          <div style="font-size:11px;color:var(--gray-500);">8 módulos del sistema</div>
-        </div>
-        <div class="quick-card" onclick="showSection('s-roles')">
-          <i class="ti ti-users" style="font-size:20px;color:var(--green);margin-bottom:7px;display:block;"></i>
-          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Roles</div>
-          <div style="font-size:11px;color:var(--gray-500);">6 roles y permisos</div>
-        </div>
-        <div class="quick-card" onclick="showSection('s-flow')">
-          <i class="ti ti-git-pull-request" style="font-size:20px;color:var(--blue);margin-bottom:7px;display:block;"></i>
-          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Flujo aprobación</div>
-          <div style="font-size:11px;color:var(--gray-500);">4 estados + reglas</div>
-        </div>
-        <div class="quick-card" onclick="showSection('s-gantt')">
-          <i class="ti ti-calendar-stats" style="font-size:20px;color:var(--purple);margin-bottom:7px;display:block;"></i>
-          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Carta Gantt</div>
-          <div style="font-size:11px;color:var(--gray-500);">10 semanas de desarrollo</div>
-        </div>
-        <div class="quick-card" onclick="showSection('s-pricing')">
-          <i class="ti ti-coins" style="font-size:20px;color:var(--green);margin-bottom:7px;display:block;"></i>
-          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Pricing</div>
-          <div style="font-size:11px;color:var(--gray-500);">USD 1K / 3K / 5K / mes</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROBLEMA -->
-    <div id="s-problem" class="deck-section">
-      <div class="label" style="margin-bottom:.4rem;">El problema</div>
-      <div class="deck-section-title">¿Por qué existe PARAGON?</div>
-      <blockquote style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:300;font-style:italic;color:var(--gray-500);border-left:3px solid var(--blue);padding-left:1rem;margin-bottom:1.5rem;line-height:1.5;">
-        "Cuando el experto se jubila, se lleva décadas de conocimiento operacional que nadie documentó."
-      </blockquote>
-      <div id="problem-metrics"></div>
-      <div id="problem-symptoms"></div>
-    </div>
-
-    <!-- MÓDULOS -->
-    <div id="s-modules" class="deck-section">
-      <div class="label" style="margin-bottom:.4rem;">La solución</div>
-      <div class="deck-section-title">Módulos del sistema</div>
-      <div id="mod-grid"></div>
-      <div id="mod-detail"></div>
-    </div>
-
-    <!-- ROLES -->
-    <div id="s-roles" class="deck-section">
-      <div class="label" style="margin-bottom:.4rem;">Estructura organizacional</div>
-      <div class="deck-section-title">Roles y permisos</div>
-      <div id="roles-grid"></div>
-      <div id="role-detail"></div>
-    </div>
-
-    <!-- FLUJO -->
-    <div id="s-flow" class="deck-section">
-      <div class="label" style="margin-bottom:.4rem;">Control de calidad</div>
-      <div class="deck-section-title">Flujo de aprobación</div>
-      <div id="flow-steps"></div>
-      <div class="label" style="margin-bottom:.6rem;">Reglas del flujo</div>
-      <div id="flow-rules"></div>
-    </div>
-
-    <!-- GANTT -->
-    <div id="s-gantt" class="deck-section">
-      <div class="label" style="margin-bottom:.4rem;">Plan de desarrollo</div>
-      <div class="deck-section-title">Carta Gantt — 10 semanas</div>
-      <div class="gantt-wrap"><div id="gantt-root"></div></div>
-      <div class="gantt-legend">
-        <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#85B7EB;"></div>Maqueta</div>
-        <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--blue);"></div>Desarrollo</div>
-        <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--purple);"></div>Módulo IA</div>
-        <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--green);"></div>Pruebas</div>
-      </div>
-    </div>
-
-    <!-- ROADMAP -->
-    <div id="s-roadmap" class="deck-section">
-      <div class="label" style="margin-bottom:.4rem;">Plan de desarrollo</div>
-      <div class="deck-section-title">Roadmap</div>
-      <div id="roadmap-phases"></div>
-      <div class="info-box">
-        <i class="ti ti-eye"></i>
-        <div>La inteligencia artificial es la evolución natural del ecosistema construido en la Etapa 1. PARAGON no es solo una herramienta de IA: es una plataforma integral de transferencia del conocimiento operacional industrial.</div>
-      </div>
-    </div>
-
-    <!-- PRICING -->
-    <div id="s-pricing" class="deck-section">
-      <div class="label" style="margin-bottom:.4rem;">Modelo de negocio</div>
-      <div class="deck-section-title">Planes SaaS</div>
-      <div id="pricing-plans"></div>
-      <div class="info-box" style="margin-bottom:1.25rem;">
-        <i class="ti ti-plus"></i>
-        <div><strong style="font-weight:500;color:var(--gray-900);">Add-ons:</strong> Onboarding +USD 1.500, carga documental +USD 500, capacitación admins +USD 300, usuarios adicionales +USD 8/usuario/mes.</div>
-      </div>
-      <div class="label" style="margin-bottom:.75rem;">Simulador de ingresos</div>
-      <div class="proj-controls">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <label>Starter</label>
-          <input type="range" min="0" max="8" value="2" step="1" id="sl-s" oninput="recalcProj()">
-          <span id="v-s" style="font-size:13px;font-weight:500;min-width:16px;">2</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <label>Professional</label>
-          <input type="range" min="0" max="8" value="2" step="1" id="sl-p" oninput="recalcProj()">
-          <span id="v-p" style="font-size:13px;font-weight:500;min-width:16px;">2</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <label>Enterprise</label>
-          <input type="range" min="0" max="5" value="1" step="1" id="sl-e" oninput="recalcProj()">
-          <span id="v-e" style="font-size:13px;font-weight:500;min-width:16px;">1</span>
-        </div>
-      </div>
-      <div class="proj-metrics">
-        <div class="proj-metric"><div class="proj-metric-lbl">MRR</div><div class="proj-metric-val" id="proj-mrr">—</div></div>
-        <div class="proj-metric"><div class="proj-metric-lbl">ARR</div><div class="proj-metric-val" id="proj-arr" style="color:var(--blue);">—</div></div>
-        <div class="proj-metric"><div class="proj-metric-lbl">Infraestructura</div><div class="proj-metric-val" id="proj-cost">—</div></div>
-        <div class="proj-metric"><div class="proj-metric-lbl">Margen bruto</div><div class="proj-metric-val" id="proj-margin" style="color:var(--green);">—</div></div>
-      </div>
-      <table class="proj-table">
-        <thead><tr><th>Escenario</th><th>Mix</th><th>MRR</th><th>ARR</th><th>Margen</th></tr></thead>
-        <tbody id="proj-tbody"></tbody>
-      </table>
-    </div>
-
-  </main>
-</div>
-
-<script src="js/data.js"></script>
-<script src="js/deck.js"></script>
-<script>
-function showSection(id) {
-  document.querySelectorAll('.deck-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const map = { 's-home': 0, 's-problem': 1, 's-modules': 2, 's-roles': 3, 's-flow': 4, 's-gantt': 5, 's-roadmap': 6, 's-pricing': 7 };
-  const btns = document.querySelectorAll('.sidebar-link');
-  if (btns[map[id]]) btns[map[id]].classList.add('active');
-  window.scrollTo(0, 0);
+/* ── TAB NAVIGATION ── */
+function initTabs(navId, sectionClass) {
+  const btns = document.querySelectorAll(`#${navId} .tab-btn`);
+  const secs = document.querySelectorAll(`.${sectionClass}`);
+  btns.forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      secs.forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      secs[i].classList.add('active');
+    });
+  });
 }
-</script>
-</body>
-</html>
+
+/* ── SECTION: PROBLEM ── */
+function renderProblem() {
+  const el = document.getElementById('problem-metrics');
+  if (!el) return;
+  el.innerHTML = DATA.problem.metrics.map(m => `
+    <div class="card">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;color:${m.color};line-height:1;margin-bottom:6px;">${m.num}</div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:5px;">${m.title}</div>
+      <div style="font-size:12px;color:var(--gray-500);line-height:1.6;">${m.desc}</div>
+    </div>`).join('');
+
+  const sym = document.getElementById('problem-symptoms');
+  if (sym) sym.innerHTML = DATA.problem.symptoms.map(s => `
+    <div style="padding:1rem;background:var(--gray-100);border-left:3px solid var(--blue);">
+      <div style="font-size:12px;font-weight:500;margin-bottom:3px;">${s.title}</div>
+      <div style="font-size:12px;color:var(--gray-500);">${s.desc}</div>
+    </div>`).join('');
+}
+
+/* ── SECTION: MODULES ── */
+let selectedModule = 0;
+function renderModules() {
+  const grid = document.getElementById('mod-grid');
+  const detail = document.getElementById('mod-detail');
+  if (!grid || !detail) return;
+
+  grid.innerHTML = DATA.modules.map((m, i) => `
+    <div class="card mod-card ${i === 0 ? 'selected' : ''}" onclick="selectModule(${i})" style="cursor:pointer;">
+      <div style="font-size:20px;color:${m.color};margin-bottom:6px;"><i class="ti ${m.icon}"></i></div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:3px;">${m.name}</div>
+      <span class="chip" style="background:${m.bg};color:${m.color};font-size:10px;">${m.tag}</span>
+    </div>`).join('');
+
+  selectModule(0);
+}
+
+function selectModule(idx) {
+  selectedModule = idx;
+  document.querySelectorAll('.mod-card').forEach((c, i) => {
+    c.classList.toggle('selected', i === idx);
+    c.style.borderColor = i === idx ? 'var(--blue-mid)' : 'var(--gray-200)';
+    c.style.background  = i === idx ? 'var(--gray-50)'  : 'var(--white)';
+  });
+  const m = DATA.modules[idx];
+  document.getElementById('mod-detail').innerHTML = `
+    <div class="card" style="height:100%;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200);">
+        <div style="width:40px;height:40px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:20px;color:${m.color};flex-shrink:0;">
+          <i class="ti ${m.icon}"></i>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;">${m.name}</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">${m.desc}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;">
+        ${m.feats.map(f => `
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:9px 11px;background:var(--gray-100);border-radius:8px;">
+            <i class="ti ${f.icon}" style="font-size:15px;color:${m.color};flex-shrink:0;margin-top:1px;"></i>
+            <div>
+              <div style="font-size:12px;font-weight:500;">${f.title}</div>
+              <div style="font-size:11px;color:var(--gray-500);margin-top:1px;line-height:1.4;">${f.desc}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+/* ── SECTION: ROLES ── */
+function renderRoles() {
+  const grid = document.getElementById('roles-grid');
+  if (!grid) return;
+  grid.innerHTML = DATA.roles.map((r, i) => `
+    <div class="role-card ${i === 0 ? 'selected' : ''}" onclick="selectRole(${i})"
+      style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:background .12s;">
+      <div style="width:34px;height:34px;border-radius:8px;background:${r.iconBg};display:flex;align-items:center;justify-content:center;font-size:17px;color:${r.iconColor};margin-bottom:8px;">
+        <i class="ti ${r.icon}"></i>
+      </div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:2px;">${r.name}</div>
+      <div style="font-size:11px;color:var(--gray-500);line-height:1.4;">${r.goal}</div>
+      <span class="chip" style="background:${r.levelBg};color:${r.levelColor};margin-top:6px;">${r.level}</span>
+    </div>`).join('');
+  selectRole(0);
+}
+
+function selectRole(idx) {
+  document.querySelectorAll('.role-card').forEach((c, i) => {
+    c.classList.toggle('selected', i === idx);
+    c.style.background = i === idx ? 'var(--gray-50)' : 'var(--white)';
+  });
+  const r = DATA.roles[idx];
+  const chips = r.modules.map((m, i) => {
+    const on = r.access[i];
+    return `<span class="chip" style="background:${on ? r.levelBg : 'var(--gray-100)'};color:${on ? r.levelColor : 'var(--gray-500)'};border:1px solid ${on ? 'transparent' : 'var(--gray-200)'};">
+      ${on ? '<i class="ti ti-check" style="font-size:10px;margin-right:2px;"></i>' : ''}${m}</span>`;
+  }).join('');
+
+  document.getElementById('role-detail').innerHTML = `
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200);">
+        <div style="width:44px;height:44px;border-radius:10px;background:${r.iconBg};display:flex;align-items:center;justify-content:center;font-size:22px;color:${r.iconColor};flex-shrink:0;">
+          <i class="ti ${r.icon}"></i>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;">${r.name}</div>
+          <div style="font-size:12px;color:var(--gray-500);">${r.goal}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;margin-bottom:1rem;">
+        ${r.perms.map((p, i) => `
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--gray-100);border-radius:8px;">
+            <i class="ti ${r.permIcons[i]}" style="font-size:14px;color:${r.iconColor};flex-shrink:0;margin-top:1px;"></i>
+            <span style="font-size:12px;color:var(--gray-500);">${p}</span>
+          </div>`).join('')}
+      </div>
+      <div>
+        <div class="label" style="margin-bottom:6px;">Acceso a módulos</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">${chips}</div>
+      </div>
+    </div>`;
+}
+
+/* ── SECTION: FLOW ── */
+function renderFlow() {
+  const steps = document.getElementById('flow-steps');
+  if (steps) steps.innerHTML = DATA.flow.steps.map(s => `
+    <div style="background:var(--white);border:1px solid var(--gray-200);padding:1.1rem;flex:1;min-width:120px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;color:${s.numColor};line-height:1;margin-bottom:5px;">${s.num}</div>
+      <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;">${s.title}</div>
+      <div style="font-size:11px;color:var(--gray-500);line-height:1.5;margin-bottom:8px;">${s.desc}</div>
+      <span class="chip" style="background:${s.whoBg};color:${s.whoColor};font-size:10px;">${s.who}</span>
+    </div>`).join('');
+
+  const rules = document.getElementById('flow-rules');
+  if (rules) rules.innerHTML = DATA.flow.rules.map(r => `
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--gray-100);border-radius:8px;">
+      <i class="ti ${r.icon}" style="font-size:16px;color:var(--blue);flex-shrink:0;margin-top:1px;"></i>
+      <div>
+        <div style="font-size:12px;font-weight:500;margin-bottom:2px;">${r.title}</div>
+        <div style="font-size:11px;color:var(--gray-500);line-height:1.4;">${r.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── SECTION: GANTT ── */
+function renderGantt() {
+  const root = document.getElementById('gantt-root');
+  if (!root) return;
+  const W = DATA.gantt.weeks;
+  const LW = 160;
+
+  let h = `<div style="display:grid;grid-template-columns:${LW}px repeat(${W},1fr);margin-bottom:5px;min-width:480px;">
+    <div></div>`;
+  for (let w = 1; w <= W; w++)
+    h += `<div style="font-size:10px;text-align:center;color:var(--gray-500);font-weight:500;padding:2px 0;">S${w}</div>`;
+  h += '</div>';
+
+  DATA.gantt.phases.forEach(phase => {
+    const phaseStart = phase.rows[0].start;
+    const phaseEnd   = phase.rows[phase.rows.length - 1].start + phase.rows[phase.rows.length - 1].dur;
+    h += `<div style="display:grid;grid-template-columns:${LW}px repeat(${W},1fr);align-items:center;margin-top:10px;margin-bottom:3px;min-width:480px;">
+      <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-500);">${phase.label}</div>`;
+    for (let w = 0; w < W; w++) {
+      const inP = w >= phaseStart && w < phaseEnd;
+      h += `<div style="height:2px;background:${inP ? phase.color : 'var(--gray-200)'};"></div>`;
+    }
+    h += '</div>';
+
+    phase.rows.forEach(row => {
+      const rowColor = row.color || phase.color;
+      h += `<div style="display:grid;grid-template-columns:${LW}px repeat(${W},1fr);align-items:center;margin-bottom:3px;min-width:480px;">
+        <div style="padding-right:8px;">
+          <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${row.name}</div>
+          <div style="font-size:10px;color:var(--gray-500);">${row.sub}</div>
+        </div>`;
+      for (let w = 0; w < W; w++) {
+        const active = w >= row.start && w < row.start + row.dur;
+        const isFirst = w === row.start;
+        const isLast  = w === row.start + row.dur - 1;
+        const br = `border-radius:${isFirst ? '4px' : '0'} ${isLast ? '4px' : '0'} ${isLast ? '4px' : '0'} ${isFirst ? '4px' : '0'}`;
+        h += active
+          ? `<div style="height:26px;background:${rowColor};${br};margin:0 1px;"></div>`
+          : `<div style="height:26px;background:var(--gray-100);border-radius:3px;margin:0 1px;"></div>`;
+      }
+      h += '</div>';
+    });
+  });
+
+  root.innerHTML = h;
+}
+
+/* ── SECTION: ROADMAP ── */
+function renderRoadmap() {
+  const el = document.getElementById('roadmap-phases');
+  if (!el) return;
+  el.innerHTML = DATA.roadmap.map(phase => `
+    <div class="card">
+      <div style="margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--gray-200);">
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:${phase.labelColor};margin-bottom:3px;">${phase.label}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;">${phase.title}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        ${phase.milestones.map((m, i) => `
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--gray-100);border-radius:8px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:${phase.dots[i]};flex-shrink:0;"></div>
+            <div style="font-size:12px;color:var(--gray-700);flex:1;">${m.text}</div>
+            <span class="chip" style="background:${phase.tagBg};color:${phase.tagColor};white-space:nowrap;">${m.tag}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+/* ── SECTION: PRICING ── */
+function renderPricing() {
+  const plans = document.getElementById('pricing-plans');
+  if (plans) plans.innerHTML = DATA.pricing.plans.map(p => `
+    <div class="card" style="position:relative;${p.featured ? 'border:2px solid var(--blue-mid);' : ''}">
+      ${p.featured ? `<div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:500;padding:2px 10px;border-radius:20px;background:var(--blue-light);color:var(--blue-dark);white-space:nowrap;">Más vendido</div>` : ''}
+      <div style="font-size:13px;font-weight:500;margin-bottom:2px;">${p.name}</div>
+      <div style="font-size:11px;color:var(--gray-500);margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--gray-200);">${p.target}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;color:${p.color};line-height:1;margin-bottom:2px;">USD ${p.price.toLocaleString()}<span style="font-size:13px;font-weight:400;color:var(--gray-500);">/mes</span></div>
+      <div style="font-size:11px;color:var(--gray-500);margin-bottom:.75rem;">${p.users}</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:.75rem;">
+        ${p.includes.map(f => `<div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--gray-500);"><i class="ti ti-check" style="font-size:13px;color:var(--green);flex-shrink:0;margin-top:1px;"></i>${f}</div>`).join('')}
+        ${p.excludes.map(f => `<div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--gray-300);"><i class="ti ti-minus" style="font-size:13px;flex-shrink:0;margin-top:1px;"></i>${f}</div>`).join('')}
+      </div>
+      <div style="font-size:11px;font-weight:500;padding:4px 8px;border-radius:6px;text-align:center;background:${p.marginBg};color:${p.marginColor};">${p.margin}</div>
+      <div style="font-size:10px;color:var(--gray-500);margin-top:5px;text-align:center;">${p.note}</div>
+    </div>`).join('');
+
+  buildProjTable();
+  recalcProj();
+}
+
+function recalcProj() {
+  const n1 = +document.getElementById('sl-s')?.value || 0;
+  const n2 = +document.getElementById('sl-p')?.value || 0;
+  const n3 = +document.getElementById('sl-e')?.value || 0;
+  if (document.getElementById('v-s')) document.getElementById('v-s').textContent = n1;
+  if (document.getElementById('v-p')) document.getElementById('v-p').textContent = n2;
+  if (document.getElementById('v-e')) document.getElementById('v-e').textContent = n3;
+  const [ps, pp, pe] = DATA.pricing.plans.map(p => p.price);
+  const mrr  = n1 * ps + n2 * pp + n3 * pe;
+  const cost = DATA.pricing.baseCost + Math.max(0, (n1 + n2 + n3 - 3) * 50);
+  const mgn  = mrr - cost;
+  const pct  = mrr > 0 ? Math.round(mgn / mrr * 100) : 0;
+  const set  = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('proj-mrr',    'USD ' + mrr.toLocaleString());
+  set('proj-arr',    'USD ' + (mrr * 12).toLocaleString());
+  set('proj-cost',   'USD ' + cost.toLocaleString());
+  set('proj-margin', 'USD ' + mgn.toLocaleString() + ' (' + pct + '%)');
+}
+
+function buildProjTable() {
+  const tbody = document.getElementById('proj-tbody');
+  if (!tbody) return;
+  const [ps, pp, pe] = DATA.pricing.plans.map(p => p.price);
+  const maxMRR = Math.max(...DATA.pricing.scenarios.map(s => s.s * ps + s.p * pp + s.e * pe));
+  tbody.innerHTML = DATA.pricing.scenarios.map((s, i) => {
+    const mrr  = s.s * ps + s.p * pp + s.e * pe;
+    const cost = DATA.pricing.baseCost + Math.max(0, (s.s + s.p + s.e - 3) * 50);
+    const pct  = mrr > 0 ? Math.round((mrr - cost) / mrr * 100) : 0;
+    const bw   = Math.round(mrr / maxMRR * 70);
+    return `<tr style="background:${i === 1 ? 'var(--gray-50)' : 'transparent'};">
+      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);font-weight:${i === 1 ? 500 : 400};">${s.label}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);color:var(--gray-500);">${s.s}S · ${s.p}P · ${s.e}E</td>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);font-weight:500;">USD ${mrr.toLocaleString()}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);color:var(--blue);">USD ${(mrr * 12).toLocaleString()}</td>
+      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);color:var(--green);">${pct}%<div style="height:5px;border-radius:3px;background:var(--blue);width:${bw}px;margin-top:3px;"></div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', () => {
+  renderProblem();
+  renderModules();
+  renderRoles();
+  renderFlow();
+  renderGantt();
+  renderRoadmap();
+  renderPricing();
+});
