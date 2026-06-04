@@ -1,301 +1,287 @@
 /* ═══════════════════════════════════════
-   PARAGON — Deck logic
+   PARAGON — Data Layer
+   Edita aquí para actualizar todo el sitio
    ═══════════════════════════════════════ */
 
-/* ── TAB NAVIGATION ── */
-function initTabs(navId, sectionClass) {
-  const btns = document.querySelectorAll(`#${navId} .tab-btn`);
-  const secs = document.querySelectorAll(`.${sectionClass}`);
-  btns.forEach((btn, i) => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => b.classList.remove('active'));
-      secs.forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      secs[i].classList.add('active');
-    });
-  });
-}
+const DATA = {
 
-/* ── SECTION: PROBLEM ── */
-function renderProblem() {
-  const el = document.getElementById('problem-metrics');
-  if (!el) return;
-  el.innerHTML = DATA.problem.metrics.map(m => `
-    <div class="card">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;color:${m.color};line-height:1;margin-bottom:6px;">${m.num}</div>
-      <div style="font-size:13px;font-weight:500;margin-bottom:5px;">${m.title}</div>
-      <div style="font-size:12px;color:var(--gray-500);line-height:1.6;">${m.desc}</div>
-    </div>`).join('');
+  /* ── EMPRESA ── */
+  company: {
+    name: "PARAGON",
+    tagline: "Plataforma de Conocimiento Industrial",
+    industry: "Industria papelera · Forestal · Procesos continuos",
+    version: "v1.0.0",
+    year: 2025,
+  },
 
-  const sym = document.getElementById('problem-symptoms');
-  if (sym) sym.innerHTML = DATA.problem.symptoms.map(s => `
-    <div style="padding:1rem;background:var(--gray-100);border-left:3px solid var(--blue);">
-      <div style="font-size:12px;font-weight:500;margin-bottom:3px;">${s.title}</div>
-      <div style="font-size:12px;color:var(--gray-500);">${s.desc}</div>
-    </div>`).join('');
-}
+  /* ── STATS HERO ── */
+  stats: [
+    { num: "6",  label: "Roles definidos" },
+    { num: "4",  label: "Módulos clave" },
+    { num: "2",  label: "Etapas evolutivas" },
+    { num: "∞",  label: "Continuidad operacional" },
+  ],
 
-/* ── SECTION: MODULES ── */
-let selectedModule = 0;
-function renderModules() {
-  const grid = document.getElementById('mod-grid');
-  const detail = document.getElementById('mod-detail');
-  if (!grid || !detail) return;
+  /* ── PROBLEMA ── */
+  problem: {
+    metrics: [
+      { num: "70%",  title: "Conocimiento tácito",   desc: "Del saber operacional existe solo en la mente de personas específicas, no en sistemas ni documentos.", color: "var(--blue)" },
+      { num: "3–5",  title: "Años de experiencia",   desc: "Tarda un operador nuevo en alcanzar la competencia de un senior. Sin plataforma, el ciclo no mejora.", color: "var(--amber)" },
+      { num: "Alto", title: "Riesgo operacional",    desc: "La dependencia de personas clave genera vulnerabilidad ante ausencias, rotación y jubilaciones.",       color: "var(--red)" },
+      { num: "∅",    title: "Sin trazabilidad",      desc: "Procedimientos dispersos en PDFs, manuales físicos y memorias individuales sin versiones ni control.",   color: "var(--gray-500)" },
+    ],
+    symptoms: [
+      { title: "Síntoma 1", desc: "Manuales desactualizados o sin versiones vigentes accesibles al operador." },
+      { title: "Síntoma 2", desc: "Capacitaciones informales sin registro ni evaluación de competencias adquiridas." },
+      { title: "Síntoma 3", desc: "Alta dependencia de individuos clave para resolver fallas y situaciones no estándar." },
+    ],
+  },
 
-  grid.innerHTML = DATA.modules.map((m, i) => `
-    <div class="card mod-card ${i === 0 ? 'selected' : ''}" onclick="selectModule(${i})" style="cursor:pointer;">
-      <div style="font-size:20px;color:${m.color};margin-bottom:6px;"><i class="ti ${m.icon}"></i></div>
-      <div style="font-size:12px;font-weight:500;margin-bottom:3px;">${m.name}</div>
-      <span class="chip" style="background:${m.bg};color:${m.color};font-size:10px;">${m.tag}</span>
-    </div>`).join('');
+  /* ── MÓDULOS ── */
+  modules: [
+    {
+      icon: "ti-gauge", color: "var(--purple)", bg: "var(--purple-light)", tag: "Core",
+      name: "Dashboard", desc: "Centro de control en tiempo real con KPIs, alertas y estado de capacitación por área.",
+      items: ["Dashboard ejecutivo", "Alertas y notificaciones", "Indicadores clave"],
+      feats: [
+        { icon: "ti-chart-bar",   title: "KPIs en tiempo real",      desc: "Cumplimiento, avance y certificaciones actualizadas al instante." },
+        { icon: "ti-bell",        title: "Alertas automáticas",       desc: "Notificaciones de vencimientos, nuevas capacitaciones y eventos críticos." },
+        { icon: "ti-layout-grid", title: "Vista por rol",             desc: "Cada usuario ve los indicadores relevantes a su cargo y área." },
+      ],
+    },
+    {
+      icon: "ti-users", color: "var(--blue)", bg: "var(--blue-light)", tag: "Core",
+      name: "Usuarios y roles", desc: "Gestión completa de la estructura organizacional con perfiles, cargos, áreas y competencias técnicas.",
+      items: ["Maestro de usuarios", "Asignación de roles", "Gestión de supervisores"],
+      feats: [
+        { icon: "ti-user-check",     title: "Perfiles por cargo y área",  desc: "Segmentación de contenido por planta y nivel de especialización." },
+        { icon: "ti-certificate",    title: "Competencias técnicas",      desc: "Capacitaciones completadas, pendientes y vencidas por operador." },
+        { icon: "ti-shield-lock",    title: "Control de acceso granular", desc: "6 roles con permisos diferenciados sobre cada módulo." },
+        { icon: "ti-building-factory", title: "Multi-planta",            desc: "Soporte para múltiples plantas con equipos y áreas independientes." },
+      ],
+    },
+    {
+      icon: "ti-school", color: "var(--blue)", bg: "var(--blue-light)", tag: "Core",
+      name: "Capacitaciones", desc: "Creación y gestión de entrenamientos industriales especializados con evaluaciones, multimedia y flujo de aprobación.",
+      items: ["Maestro / Crear cursos", "Asignaciones", "Mis capacitaciones", "Evaluaciones", "Certificaciones", "Matriz de competencias"],
+      feats: [
+        { icon: "ti-video",           title: "Contenido multimedia",    desc: "Vídeos, presentaciones, instructivos y evaluaciones integradas." },
+        { icon: "ti-git-pull-request", title: "Flujo de aprobación",   desc: "Validación técnica obligatoria antes de publicación oficial." },
+        { icon: "ti-versions",        title: "Control de versiones",    desc: "Historial de cambios y trazabilidad completa de cada curso." },
+        { icon: "ti-chart-line",      title: "Seguimiento de avance",   desc: "Estado por colaborador: completado, pendiente, vencido." },
+      ],
+    },
+    {
+      icon: "ti-library", color: "var(--blue)", bg: "var(--blue-light)", tag: "Core",
+      name: "Biblioteca técnica", desc: "Repositorio centralizado de manuales, SOPs, checklists, P&ID y documentación crítica. Siempre la versión vigente.",
+      items: ["Manuales", "Checklists", "P&ID", "Fallas frecuentes"],
+      feats: [
+        { icon: "ti-search",      title: "Búsqueda avanzada",    desc: "Indexación por área técnica, equipo, tipo y palabras clave." },
+        { icon: "ti-file-check",  title: "Control documental",   desc: "Versiones vigentes, fechas de revisión y estado de aprobación." },
+        { icon: "ti-category",    title: "Categorización técnica", desc: "Por plantas, líneas de proceso, sistemas y equipos." },
+        { icon: "ti-download",    title: "Descarga controlada",  desc: "Acceso según rol y área. Registro de descargas por usuario." },
+      ],
+    },
+    {
+      icon: "ti-robot", color: "var(--purple)", bg: "var(--purple-light)", tag: "Etapa 2",
+      name: "IA Industrial", desc: "Chatbot técnico industrial que responde en lenguaje natural usando documentación interna validada. RAG sobre base propia.",
+      items: ["Chat técnico (IA)", "RAG documental", "Contexto por rol y área"],
+      feats: [
+        { icon: "ti-message-chatbot", title: "Chatbot en lenguaje natural", desc: "Preguntas sobre procedimientos y troubleshooting respondidas al instante." },
+        { icon: "ti-database",        title: "RAG sobre base propia",       desc: "El modelo responde solo desde manuales y SOPs aprobados." },
+        { icon: "ti-brain",           title: "Contexto operacional",        desc: "Respuestas personalizadas según cargo, planta y área del usuario." },
+        { icon: "ti-shield-check",    title: "Sin alucinaciones",           desc: "Respuestas acotadas a la documentación interna validada." },
+      ],
+    },
+    {
+      icon: "ti-chart-bar", color: "var(--green)", bg: "var(--green-light)", tag: "Core",
+      name: "Analytics", desc: "Dashboards ejecutivos, métricas de cumplimiento y reportes automáticos para supervisión estratégica.",
+      items: ["KPIs capacitación", "Cumplimiento", "Métricas de uso", "Métricas IA", "Reportes"],
+      feats: [
+        { icon: "ti-report-analytics", title: "Reportes automáticos",     desc: "Exportables para dirección y organismos reguladores." },
+        { icon: "ti-progress",         title: "Cumplimiento por área",    desc: "Vista global y por área del avance de capacitación." },
+        { icon: "ti-trending-up",      title: "Tendencias históricas",    desc: "Evolución del conocimiento operacional en el tiempo." },
+      ],
+    },
+    {
+      icon: "ti-settings", color: "var(--amber)", bg: "var(--amber-light)", tag: "Core",
+      name: "Administración", desc: "Configuración general de la plataforma, flujos de aprobación y auditoría completa de acciones.",
+      items: ["Configuración general", "Flujos de aprobación", "Auditoría"],
+      feats: [
+        { icon: "ti-settings",    title: "Config. general",       desc: "Parámetros de la plataforma, notificaciones e integraciones." },
+        { icon: "ti-git-branch",  title: "Flujos personalizables", desc: "Define quién revisa y aprueba cada tipo de contenido." },
+        { icon: "ti-clipboard-data", title: "Auditoría completa", desc: "Log de todas las acciones con usuario, fecha y detalle." },
+      ],
+    },
+    {
+      icon: "ti-help", color: "var(--gray-700)", bg: "var(--gray-100)", tag: "Core",
+      name: "Soporte", desc: "Centro de ayuda integrado, gestión de tickets y documentación de la plataforma.",
+      items: ["Centro de ayuda", "Contacto soporte", "Tickets", "Documentación plataforma"],
+      feats: [
+        { icon: "ti-help",         title: "Centro de ayuda",   desc: "Artículos y guías de uso por módulo y rol." },
+        { icon: "ti-ticket",       title: "Gestión de tickets", desc: "Seguimiento de incidencias con SLA según plan." },
+        { icon: "ti-file-text",    title: "Documentación",     desc: "Manual técnico y de administración de la plataforma." },
+      ],
+    },
+  ],
 
-  selectModule(0);
-}
+  /* ── ROLES ── */
+  roles: [
+    {
+      name: "Administrador general", goal: "Administrar completamente la plataforma",
+      level: "Sistema", levelBg: "var(--purple-light)", levelColor: "var(--purple-dark)",
+      icon: "ti-shield-cog", iconBg: "var(--purple-light)", iconColor: "var(--purple)",
+      perms: ["Crear y gestionar usuarios", "Asignar roles y permisos", "Configuración general", "Publicar capacitaciones", "Acceso total a todos los módulos"],
+      permIcons: ["ti-users-plus", "ti-key", "ti-settings", "ti-rocket", "ti-lock-open"],
+      modules: ["Usuarios", "Capacit.", "Biblioteca", "KPIs", "Config.", "IA"],
+      access:  [1, 1, 1, 1, 1, 1],
+    },
+    {
+      name: "Instructor / Autor técnico", goal: "Crear contenido técnico y capacitaciones",
+      level: "Contenido", levelBg: "var(--blue-light)", levelColor: "var(--blue-dark)",
+      icon: "ti-pencil-bolt", iconBg: "var(--blue-light)", iconColor: "var(--blue)",
+      perms: ["Crear y editar cursos técnicos", "Diseñar evaluaciones", "Subir contenido multimedia", "Mantener versiones", "Enviar a revisión y aprobación"],
+      permIcons: ["ti-book-2", "ti-puzzle", "ti-upload", "ti-versions", "ti-send"],
+      modules: ["Usuarios", "Capacit.", "Biblioteca", "KPIs", "Config.", "IA"],
+      access:  [0, 1, 1, 0, 0, 0],
+    },
+    {
+      name: "Supervisor / Jefe de área", goal: "Gestionar cumplimiento del equipo",
+      level: "Gestión", levelBg: "var(--green-light)", levelColor: "var(--green-dark)",
+      icon: "ti-chart-dots-3", iconBg: "var(--green-light)", iconColor: "var(--green)",
+      perms: ["Asignar capacitaciones", "Monitorear avance del equipo", "Revisar cumplimiento", "Visualizar KPIs del área", "Estado de certificaciones"],
+      permIcons: ["ti-clipboard-check", "ti-progress", "ti-checklist", "ti-chart-bar", "ti-eye"],
+      modules: ["Usuarios", "Capacit.", "Biblioteca", "KPIs", "Config.", "IA"],
+      access:  [0, 1, 1, 1, 0, 0],
+    },
+    {
+      name: "Gerencia", goal: "Supervisión estratégica y cumplimiento",
+      level: "Estratégico", levelBg: "var(--amber-light)", levelColor: "var(--amber)",
+      icon: "ti-building-skyscraper", iconBg: "var(--amber-light)", iconColor: "var(--amber)",
+      perms: ["Dashboards ejecutivos", "Métricas y reportes globales", "Auditoría", "Estado global por planta", "Solo lectura"],
+      permIcons: ["ti-dashboard", "ti-report-analytics", "ti-clipboard-data", "ti-world", "ti-lock"],
+      modules: ["Usuarios", "Capacit.", "Biblioteca", "KPIs", "Config.", "IA"],
+      access:  [0, 0, 0, 1, 1, 0],
+    },
+    {
+      name: "Colaborador", goal: "Consumir contenido y capacitarse",
+      level: "Operacional", levelBg: "var(--gray-100)", levelColor: "var(--gray-700)",
+      icon: "ti-user-check", iconBg: "var(--gray-100)", iconColor: "var(--gray-700)",
+      perms: ["Realizar capacitaciones asignadas", "Consultar manuales", "Descargar documentación", "Usar asistente IA (E2)", "Ver historial y certificaciones"],
+      permIcons: ["ti-player-play", "ti-file-search", "ti-download", "ti-robot", "ti-certificate"],
+      modules: ["Usuarios", "Capacit.", "Biblioteca", "KPIs", "Config.", "IA"],
+      access:  [0, 1, 1, 0, 0, 1],
+    },
+    {
+      name: "Admin. documental", goal: "Gestionar documentación técnica oficial",
+      level: "Documental", levelBg: "#FAECE7", levelColor: "#712B13",
+      icon: "ti-files", iconBg: "#FAECE7", iconColor: "#993C1D",
+      perms: ["Subir manuales y documentos", "Controlar versiones", "Clasificar documentos", "Administrar vigencia", "Aprobar y publicar documentación"],
+      permIcons: ["ti-upload", "ti-versions", "ti-category-2", "ti-calendar-check", "ti-file-check"],
+      modules: ["Usuarios", "Capacit.", "Biblioteca", "KPIs", "Config.", "IA"],
+      access:  [0, 0, 1, 0, 0, 0],
+    },
+  ],
 
-function selectModule(idx) {
-  selectedModule = idx;
-  document.querySelectorAll('.mod-card').forEach((c, i) => {
-    c.classList.toggle('selected', i === idx);
-    c.style.borderColor = i === idx ? 'var(--blue-mid)' : 'var(--gray-200)';
-    c.style.background  = i === idx ? 'var(--gray-50)'  : 'var(--white)';
-  });
-  const m = DATA.modules[idx];
-  document.getElementById('mod-detail').innerHTML = `
-    <div class="card" style="height:100%;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200);">
-        <div style="width:40px;height:40px;border-radius:10px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:20px;color:${m.color};flex-shrink:0;">
-          <i class="ti ${m.icon}"></i>
-        </div>
-        <div>
-          <div style="font-size:14px;font-weight:500;">${m.name}</div>
-          <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">${m.desc}</div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;">
-        ${m.feats.map(f => `
-          <div style="display:flex;align-items:flex-start;gap:8px;padding:9px 11px;background:var(--gray-100);border-radius:8px;">
-            <i class="ti ${f.icon}" style="font-size:15px;color:${m.color};flex-shrink:0;margin-top:1px;"></i>
-            <div>
-              <div style="font-size:12px;font-weight:500;">${f.title}</div>
-              <div style="font-size:11px;color:var(--gray-500);margin-top:1px;line-height:1.4;">${f.desc}</div>
-            </div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-}
+  /* ── FLUJO DE APROBACIÓN ── */
+  flow: {
+    steps: [
+      { num: "01", title: "Borrador",    desc: "El Instructor crea el contenido técnico, sube material y configura evaluaciones.", who: "Instructor",         whoBg: "var(--blue-light)",   whoColor: "var(--blue-dark)",   numColor: "#B5D4F4" },
+      { num: "02", title: "En revisión", desc: "El contenido es enviado a revisión técnica. No puede modificarse durante este estado.", who: "Instructor → Revisor", whoBg: "var(--amber-light)", whoColor: "var(--amber)",       numColor: "#FAC775" },
+      { num: "03", title: "Aprobado",    desc: "El revisor valida el contenido. Puede solicitar correcciones o aprobar para publicación.", who: "Supervisor / Admin", whoBg: "var(--green-light)", whoColor: "var(--green-dark)",  numColor: "#9FE1CB" },
+      { num: "04", title: "Publicado",   desc: "La capacitación queda disponible para los colaboradores según su rol y área.", who: "Admin general",   whoBg: "var(--purple-light)", whoColor: "var(--purple-dark)", numColor: "#CECBF6" },
+    ],
+    rules: [
+      { icon: "ti-git-branch",    title: "Control de versiones",    desc: "Cada modificación genera una nueva versión. El historial completo es trazable." },
+      { icon: "ti-lock",          title: "Sin publicación directa",  desc: "Ningún Instructor puede publicar sin pasar por revisión y aprobación técnica." },
+      { icon: "ti-history",       title: "Historial de cambios",     desc: "Cada transición queda registrada con usuario, fecha y comentario." },
+      { icon: "ti-alert-circle",  title: "Notificaciones de estado", desc: "Los responsables reciben alertas al cambiar el estado de una capacitación." },
+      { icon: "ti-rotate",        title: "Ciclo de corrección",      desc: "Si se rechazan cambios, vuelve a Borrador con comentarios del revisor." },
+      { icon: "ti-archive",       title: "Versiones archivadas",     desc: "Al publicar nueva versión, la anterior queda archivada y accesible." },
+    ],
+  },
 
-/* ── SECTION: ROLES ── */
-function renderRoles() {
-  const grid = document.getElementById('roles-grid');
-  if (!grid) return;
-  grid.innerHTML = DATA.roles.map((r, i) => `
-    <div class="role-card ${i === 0 ? 'selected' : ''}" onclick="selectRole(${i})"
-      style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:background .12s;">
-      <div style="width:34px;height:34px;border-radius:8px;background:${r.iconBg};display:flex;align-items:center;justify-content:center;font-size:17px;color:${r.iconColor};margin-bottom:8px;">
-        <i class="ti ${r.icon}"></i>
-      </div>
-      <div style="font-size:12px;font-weight:500;margin-bottom:2px;">${r.name}</div>
-      <div style="font-size:11px;color:var(--gray-500);line-height:1.4;">${r.goal}</div>
-      <span class="chip" style="background:${r.levelBg};color:${r.levelColor};margin-top:6px;">${r.level}</span>
-    </div>`).join('');
-  selectRole(0);
-}
+  /* ── GANTT ── */
+  gantt: {
+    weeks: 10,
+    phases: [
+      { label: "Maqueta", color: "#85B7EB", rows: [
+        { name: "Diseño UI/UX", sub: "Wireframes y prototipos", start: 0, dur: 2 },
+      ]},
+      { label: "Desarrollo", color: "var(--blue)", rows: [
+        { name: "Mantenedores y roles",   sub: "Usuarios, permisos, estructura",  start: 2, dur: 2, color: "var(--blue)" },
+        { name: "Módulo capacitaciones",  sub: "Creación de cursos y evaluaciones", start: 4, dur: 1, color: "var(--blue)" },
+        { name: "Módulo ejecución",       sub: "Asignaciones y seguimiento",      start: 5, dur: 1, color: "var(--blue)" },
+        { name: "Biblioteca técnica",     sub: "Manuales, checklists, P&ID",      start: 6, dur: 1, color: "var(--blue)" },
+        { name: "Módulo IA + Chatbot",    sub: "RAG sobre base documental",       start: 7, dur: 1, color: "var(--purple)" },
+      ]},
+      { label: "Pruebas", color: "var(--green)", rows: [
+        { name: "QA y validación", sub: "Testing funcional y de carga", start: 8, dur: 2, color: "var(--green)" },
+      ]},
+    ],
+  },
 
-function selectRole(idx) {
-  document.querySelectorAll('.role-card').forEach((c, i) => {
-    c.classList.toggle('selected', i === idx);
-    c.style.background = i === idx ? 'var(--gray-50)' : 'var(--white)';
-  });
-  const r = DATA.roles[idx];
-  const chips = r.modules.map((m, i) => {
-    const on = r.access[i];
-    return `<span class="chip" style="background:${on ? r.levelBg : 'var(--gray-100)'};color:${on ? r.levelColor : 'var(--gray-500)'};border:1px solid ${on ? 'transparent' : 'var(--gray-200)'};">
-      ${on ? '<i class="ti ti-check" style="font-size:10px;margin-right:2px;"></i>' : ''}${m}</span>`;
-  }).join('');
+  /* ── ROADMAP ── */
+  roadmap: [
+    { label: "Etapa 1 — Base sólida", title: "Gestión del conocimiento", labelColor: "var(--blue)",
+      milestones: [
+        { text: "Módulo de usuarios, roles y permisos", tag: "Sprint 1-2" },
+        { text: "Módulo de capacitaciones técnicas",    tag: "Sprint 3-4" },
+        { text: "Flujo de revisión y aprobación",       tag: "Sprint 4-5" },
+        { text: "Biblioteca documental centralizada",   tag: "Sprint 5-6" },
+        { text: "KPIs y reportes de cumplimiento",      tag: "Sprint 7"   },
+      ],
+      tagBg: "var(--blue-light)", tagColor: "var(--blue-dark)",
+      dots: ["#B5D4F4", "#85B7EB", "#378ADD", "#185FA5", "#0C447C"],
+    },
+    { label: "Etapa 2 — Evolución inteligente", title: "Inteligencia artificial", labelColor: "var(--purple)",
+      milestones: [
+        { text: "Pipeline RAG sobre documentación interna",  tag: "Sprint 1-2" },
+        { text: "Chatbot industrial con contexto de rol",    tag: "Sprint 3-4" },
+        { text: "Integración con Biblioteca documental",     tag: "Sprint 4"   },
+        { text: "Respuestas con citas a documentos fuente",  tag: "Sprint 5"   },
+        { text: "Panel de trazabilidad de consultas IA",     tag: "Sprint 6"   },
+      ],
+      tagBg: "var(--purple-light)", tagColor: "var(--purple-dark)",
+      dots: ["#AFA9EC", "#8F87E0", "#7F77DD", "#534AB7", "#3C3489"],
+    },
+  ],
 
-  document.getElementById('role-detail').innerHTML = `
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200);">
-        <div style="width:44px;height:44px;border-radius:10px;background:${r.iconBg};display:flex;align-items:center;justify-content:center;font-size:22px;color:${r.iconColor};flex-shrink:0;">
-          <i class="ti ${r.icon}"></i>
-        </div>
-        <div>
-          <div style="font-size:14px;font-weight:500;">${r.name}</div>
-          <div style="font-size:12px;color:var(--gray-500);">${r.goal}</div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;margin-bottom:1rem;">
-        ${r.perms.map((p, i) => `
-          <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--gray-100);border-radius:8px;">
-            <i class="ti ${r.permIcons[i]}" style="font-size:14px;color:${r.iconColor};flex-shrink:0;margin-top:1px;"></i>
-            <span style="font-size:12px;color:var(--gray-500);">${p}</span>
-          </div>`).join('')}
-      </div>
-      <div>
-        <div class="label" style="margin-bottom:6px;">Acceso a módulos</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;">${chips}</div>
-      </div>
-    </div>`;
-}
+  /* ── PRICING ── */
+  pricing: {
+    plans: [
+      {
+        name: "Starter", target: "1 planta · piloto", price: 1000, users: "Hasta 50 usuarios",
+        color: "var(--blue)", featured: false,
+        includes: ["Usuarios y roles completos", "Módulo de capacitaciones", "Biblioteca documental", "Dashboard y KPIs básicos", "Flujos de aprobación"],
+        excludes: ["IA / Chatbot técnico", "Multi-planta"],
+        margin: "~USD 640/mes",  marginBg: "var(--green-light)",  marginColor: "var(--green-dark)",
+        note: "Costo empresa: ~USD 20/usuario/mes",
+      },
+      {
+        name: "Professional", target: "Empresa mediana · con IA", price: 3000, users: "Hasta 150 usuarios",
+        color: "var(--blue)", featured: true,
+        includes: ["Todo lo de Starter", "Chat técnico IA (RAG)", "Analytics avanzado", "Hasta 3 plantas", "Reportes ejecutivos"],
+        excludes: ["Plantas ilimitadas"],
+        margin: "~USD 2.640/mes", marginBg: "var(--blue-light)", marginColor: "var(--blue-dark)",
+        note: "Costo empresa: ~USD 20/usuario/mes",
+      },
+      {
+        name: "Enterprise", target: "Corporativo · toda la operación", price: 5000, users: "Usuarios ilimitados",
+        color: "var(--purple)", featured: false,
+        includes: ["Todo lo de Professional", "Plantas ilimitadas", "SLA y soporte prioritario", "Onboarding dedicado", "Integraciones a medida", "Descuento contrato anual"],
+        excludes: [],
+        margin: "~USD 4.640/mes", marginBg: "var(--purple-light)", marginColor: "var(--purple-dark)",
+        note: "Arauco, CMPC, Masisa, Celco…",
+      },
+    ],
+    scenarios: [
+      { label: "Año 1 — Conservador", s: 2, p: 1, e: 0 },
+      { label: "Año 1 — Base",        s: 2, p: 2, e: 1 },
+      { label: "Año 2 — Crecimiento", s: 3, p: 4, e: 2 },
+      { label: "Año 3 — Escala",      s: 4, p: 6, e: 3 },
+    ],
+    baseCost: 360,
+  },
 
-/* ── SECTION: FLOW ── */
-function renderFlow() {
-  const steps = document.getElementById('flow-steps');
-  if (steps) steps.innerHTML = DATA.flow.steps.map(s => `
-    <div style="background:var(--white);border:1px solid var(--gray-200);padding:1.1rem;flex:1;min-width:120px;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;color:${s.numColor};line-height:1;margin-bottom:5px;">${s.num}</div>
-      <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;">${s.title}</div>
-      <div style="font-size:11px;color:var(--gray-500);line-height:1.5;margin-bottom:8px;">${s.desc}</div>
-      <span class="chip" style="background:${s.whoBg};color:${s.whoColor};font-size:10px;">${s.who}</span>
-    </div>`).join('');
-
-  const rules = document.getElementById('flow-rules');
-  if (rules) rules.innerHTML = DATA.flow.rules.map(r => `
-    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--gray-100);border-radius:8px;">
-      <i class="ti ${r.icon}" style="font-size:16px;color:var(--blue);flex-shrink:0;margin-top:1px;"></i>
-      <div>
-        <div style="font-size:12px;font-weight:500;margin-bottom:2px;">${r.title}</div>
-        <div style="font-size:11px;color:var(--gray-500);line-height:1.4;">${r.desc}</div>
-      </div>
-    </div>`).join('');
-}
-
-/* ── SECTION: GANTT ── */
-function renderGantt() {
-  const root = document.getElementById('gantt-root');
-  if (!root) return;
-  const W = DATA.gantt.weeks;
-  const LW = 160;
-
-  let h = `<div style="display:grid;grid-template-columns:${LW}px repeat(${W},1fr);margin-bottom:5px;min-width:480px;">
-    <div></div>`;
-  for (let w = 1; w <= W; w++)
-    h += `<div style="font-size:10px;text-align:center;color:var(--gray-500);font-weight:500;padding:2px 0;">S${w}</div>`;
-  h += '</div>';
-
-  DATA.gantt.phases.forEach(phase => {
-    const phaseStart = phase.rows[0].start;
-    const phaseEnd   = phase.rows[phase.rows.length - 1].start + phase.rows[phase.rows.length - 1].dur;
-    h += `<div style="display:grid;grid-template-columns:${LW}px repeat(${W},1fr);align-items:center;margin-top:10px;margin-bottom:3px;min-width:480px;">
-      <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-500);">${phase.label}</div>`;
-    for (let w = 0; w < W; w++) {
-      const inP = w >= phaseStart && w < phaseEnd;
-      h += `<div style="height:2px;background:${inP ? phase.color : 'var(--gray-200)'};"></div>`;
-    }
-    h += '</div>';
-
-    phase.rows.forEach(row => {
-      const rowColor = row.color || phase.color;
-      h += `<div style="display:grid;grid-template-columns:${LW}px repeat(${W},1fr);align-items:center;margin-bottom:3px;min-width:480px;">
-        <div style="padding-right:8px;">
-          <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${row.name}</div>
-          <div style="font-size:10px;color:var(--gray-500);">${row.sub}</div>
-        </div>`;
-      for (let w = 0; w < W; w++) {
-        const active = w >= row.start && w < row.start + row.dur;
-        const isFirst = w === row.start;
-        const isLast  = w === row.start + row.dur - 1;
-        const br = `border-radius:${isFirst ? '4px' : '0'} ${isLast ? '4px' : '0'} ${isLast ? '4px' : '0'} ${isFirst ? '4px' : '0'}`;
-        h += active
-          ? `<div style="height:26px;background:${rowColor};${br};margin:0 1px;"></div>`
-          : `<div style="height:26px;background:var(--gray-100);border-radius:3px;margin:0 1px;"></div>`;
-      }
-      h += '</div>';
-    });
-  });
-
-  root.innerHTML = h;
-}
-
-/* ── SECTION: ROADMAP ── */
-function renderRoadmap() {
-  const el = document.getElementById('roadmap-phases');
-  if (!el) return;
-  el.innerHTML = DATA.roadmap.map(phase => `
-    <div class="card">
-      <div style="margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--gray-200);">
-        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:${phase.labelColor};margin-bottom:3px;">${phase.label}</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;">${phase.title}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        ${phase.milestones.map((m, i) => `
-          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--gray-100);border-radius:8px;">
-            <div style="width:8px;height:8px;border-radius:50%;background:${phase.dots[i]};flex-shrink:0;"></div>
-            <div style="font-size:12px;color:var(--gray-700);flex:1;">${m.text}</div>
-            <span class="chip" style="background:${phase.tagBg};color:${phase.tagColor};white-space:nowrap;">${m.tag}</span>
-          </div>`).join('')}
-      </div>
-    </div>`).join('');
-}
-
-/* ── SECTION: PRICING ── */
-function renderPricing() {
-  const plans = document.getElementById('pricing-plans');
-  if (plans) plans.innerHTML = DATA.pricing.plans.map(p => `
-    <div class="card" style="position:relative;${p.featured ? 'border:2px solid var(--blue-mid);' : ''}">
-      ${p.featured ? `<div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:500;padding:2px 10px;border-radius:20px;background:var(--blue-light);color:var(--blue-dark);white-space:nowrap;">Más vendido</div>` : ''}
-      <div style="font-size:13px;font-weight:500;margin-bottom:2px;">${p.name}</div>
-      <div style="font-size:11px;color:var(--gray-500);margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--gray-200);">${p.target}</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;color:${p.color};line-height:1;margin-bottom:2px;">USD ${p.price.toLocaleString()}<span style="font-size:13px;font-weight:400;color:var(--gray-500);">/mes</span></div>
-      <div style="font-size:11px;color:var(--gray-500);margin-bottom:.75rem;">${p.users}</div>
-      <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:.75rem;">
-        ${p.includes.map(f => `<div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--gray-500);"><i class="ti ti-check" style="font-size:13px;color:var(--green);flex-shrink:0;margin-top:1px;"></i>${f}</div>`).join('')}
-        ${p.excludes.map(f => `<div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--gray-300);"><i class="ti ti-minus" style="font-size:13px;flex-shrink:0;margin-top:1px;"></i>${f}</div>`).join('')}
-      </div>
-      <div style="font-size:11px;font-weight:500;padding:4px 8px;border-radius:6px;text-align:center;background:${p.marginBg};color:${p.marginColor};">${p.margin}</div>
-      <div style="font-size:10px;color:var(--gray-500);margin-top:5px;text-align:center;">${p.note}</div>
-    </div>`).join('');
-
-  buildProjTable();
-  recalcProj();
-}
-
-function recalcProj() {
-  const n1 = +document.getElementById('sl-s')?.value || 0;
-  const n2 = +document.getElementById('sl-p')?.value || 0;
-  const n3 = +document.getElementById('sl-e')?.value || 0;
-  if (document.getElementById('v-s')) document.getElementById('v-s').textContent = n1;
-  if (document.getElementById('v-p')) document.getElementById('v-p').textContent = n2;
-  if (document.getElementById('v-e')) document.getElementById('v-e').textContent = n3;
-  const [ps, pp, pe] = DATA.pricing.plans.map(p => p.price);
-  const mrr  = n1 * ps + n2 * pp + n3 * pe;
-  const cost = DATA.pricing.baseCost + Math.max(0, (n1 + n2 + n3 - 3) * 50);
-  const mgn  = mrr - cost;
-  const pct  = mrr > 0 ? Math.round(mgn / mrr * 100) : 0;
-  const set  = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  set('proj-mrr',    'USD ' + mrr.toLocaleString());
-  set('proj-arr',    'USD ' + (mrr * 12).toLocaleString());
-  set('proj-cost',   'USD ' + cost.toLocaleString());
-  set('proj-margin', 'USD ' + mgn.toLocaleString() + ' (' + pct + '%)');
-}
-
-function buildProjTable() {
-  const tbody = document.getElementById('proj-tbody');
-  if (!tbody) return;
-  const [ps, pp, pe] = DATA.pricing.plans.map(p => p.price);
-  const maxMRR = Math.max(...DATA.pricing.scenarios.map(s => s.s * ps + s.p * pp + s.e * pe));
-  tbody.innerHTML = DATA.pricing.scenarios.map((s, i) => {
-    const mrr  = s.s * ps + s.p * pp + s.e * pe;
-    const cost = DATA.pricing.baseCost + Math.max(0, (s.s + s.p + s.e - 3) * 50);
-    const pct  = mrr > 0 ? Math.round((mrr - cost) / mrr * 100) : 0;
-    const bw   = Math.round(mrr / maxMRR * 70);
-    return `<tr style="background:${i === 1 ? 'var(--gray-50)' : 'transparent'};">
-      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);font-weight:${i === 1 ? 500 : 400};">${s.label}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);color:var(--gray-500);">${s.s}S · ${s.p}P · ${s.e}E</td>
-      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);font-weight:500;">USD ${mrr.toLocaleString()}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);color:var(--blue);">USD ${(mrr * 12).toLocaleString()}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid var(--gray-200);color:var(--green);">${pct}%<div style="height:5px;border-radius:3px;background:var(--blue);width:${bw}px;margin-top:3px;"></div></td>
-    </tr>`;
-  }).join('');
-}
-
-/* ── INIT ── */
-document.addEventListener('DOMContentLoaded', () => {
-  renderProblem();
-  renderModules();
-  renderRoles();
-  renderFlow();
-  renderGantt();
-  renderRoadmap();
-  renderPricing();
-});
+};
