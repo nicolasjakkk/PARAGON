@@ -1,267 +1,148 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PARAGON — Plataforma de Conocimiento Industrial</title>
-  <meta name="description" content="Plataforma integral de transferencia y preservación del conocimiento operacional industrial para la industria papelera, forestal y de procesos continuos.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    /* ── HERO ── */
-    .hero {
-      position: relative; overflow: hidden;
-      background: var(--gray-50);
-      border-bottom: 1px solid var(--gray-200);
-      padding: 3.5rem 2rem 3rem;
-    }
-    .hero-grid {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image: linear-gradient(var(--gray-200) 1px, transparent 1px),
-                        linear-gradient(90deg, var(--gray-200) 1px, transparent 1px);
-      background-size: 32px 32px; opacity: .5;
-    }
-    .hero-inner { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
-    .hero-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(48px, 8vw, 72px);
-      font-weight: 700; line-height: 1; margin: 1rem 0 .75rem;
-    }
-    .hero-title span { color: var(--blue); }
-    .hero-sub { font-size: 15px; font-weight: 300; color: var(--gray-500); line-height: 1.7; max-width: 500px; margin-bottom: 2rem; }
-    .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 2.5rem; }
-    .hero-stats { display: flex; gap: 2.5rem; flex-wrap: wrap; }
-    .stat-num { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 700; color: var(--blue); line-height: 1; }
-    .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--gray-500); margin-top: 2px; }
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── SITE NAV ── */
-    .site-nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--white); border-bottom: 1px solid var(--gray-200);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; box-shadow: var(--shadow-sm);
-    }
-    .site-nav-logo { display: flex; align-items: center; gap: 10px; padding: 12px 0; }
-    .site-nav-logo span { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; }
-    .site-nav-logo span em { color: var(--blue); font-style: normal; }
-    .site-nav-links { display: flex; gap: 0; }
-    .site-nav-links a {
-      font-size: 12px; font-weight: 500; color: var(--gray-500);
-      padding: 0 14px; height: 52px; display: flex; align-items: center;
-      border-bottom: 2px solid transparent; transition: all .15s; white-space: nowrap;
-    }
-    .site-nav-links a:hover { color: var(--gray-900); }
-    .site-nav-links a.cta-link {
-      color: var(--blue); border: 1px solid var(--blue-mid);
-      border-radius: var(--radius-md); margin: 10px 0 10px 10px;
-      padding: 0 14px; height: 32px; background: var(--blue-light);
-    }
-    .site-nav-links a.cta-link:hover { background: var(--blue-mid); color: var(--white); }
+:root {
+  --blue:       #185FA5;
+  --blue-dark:  #0C447C;
+  --blue-light: #E6F1FB;
+  --blue-mid:   #85B7EB;
+  --purple:     #534AB7;
+  --purple-light: #EEEDFE;
+  --purple-dark:  #3C3489;
+  --green:      #1D9E75;
+  --green-light: #E1F5EE;
+  --green-dark:  #085041;
+  --amber:      #854F0B;
+  --amber-light: #FAEEDA;
+  --red:        #E24B4A;
+  --gray-50:    #f8f8f6;
+  --gray-100:   #f2f2f0;
+  --gray-200:   #e5e5e3;
+  --gray-300:   #d0d0ce;
+  --gray-500:   #888886;
+  --gray-700:   #444441;
+  --gray-900:   #1a1a18;
+  --white:      #ffffff;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.07);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.09);
+}
 
-    /* ── SECTIONS ── */
-    .page-section { padding: 3rem 2rem; max-width: 860px; margin: 0 auto; }
-    .page-section + .page-section { border-top: 1px solid var(--gray-200); }
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
 
-    /* ── PROBLEM CARDS ── */
-    #problem-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--gray-200); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
-    #problem-metrics .card { border-radius: 0; border: none; }
-    #problem-symptoms { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+img, svg { display: block; }
 
-    /* ── MODULES ── */
-    #mod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+/* ── TYPOGRAPHY ── */
+.bcond { font-family: 'Barlow Condensed', sans-serif; }
+.label {
+  font-size: 10px; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--gray-500);
+}
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .02em;
+}
 
-    /* ── ROLES ── */
-    #roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--gray-200); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
-    #roles-grid .role-card { border-radius: 0; border: none; }
+/* ── BADGE ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px;
+  border-radius: 20px; border: 1px solid currentColor;
+}
+.badge-blue   { color: var(--blue-dark); background: var(--blue-light);   border-color: var(--blue-mid); }
+.badge-purple { color: var(--purple-dark); background: var(--purple-light); border-color: #AFA9EC; }
+.badge-green  { color: var(--green-dark); background: var(--green-light);  border-color: #9FE1CB; }
+.badge-amber  { color: var(--amber); background: var(--amber-light);       border-color: #FAC775; }
 
-    /* ── FLOW ── */
-    #flow-steps { display: flex; gap: 0; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; flex-wrap: wrap; }
-    #flow-steps > div { border-right: 1px solid var(--gray-200); }
-    #flow-steps > div:last-child { border-right: none; }
-    #flow-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+/* ── CARD ── */
+.card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg); padding: 1.1rem;
+}
 
-    /* ── ROADMAP ── */
-    #roadmap-phases { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+/* ── BUTTON ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 500; padding: 9px 18px;
+  border-radius: var(--radius-md); border: 1px solid var(--gray-200);
+  background: var(--white); color: var(--gray-700);
+  transition: background .15s, border-color .15s;
+}
+.btn:hover { background: var(--gray-100); }
+.btn-primary {
+  background: var(--blue); color: var(--white);
+  border-color: var(--blue);
+}
+.btn-primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--gray-100); }
 
-    /* ── GANTT ── */
-    .gantt-wrap { overflow-x: auto; }
-    .gantt-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: .85rem; }
-    .gantt-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--gray-500); }
-    .gantt-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+/* ── NAV TABS ── */
+.tab-nav {
+  display: flex; overflow-x: auto; border-bottom: 1px solid var(--gray-200);
+  background: var(--white); gap: 0;
+}
+.tab-btn {
+  font-size: 12px; font-weight: 500; padding: 11px 15px;
+  border: none; border-bottom: 2px solid transparent;
+  background: transparent; color: var(--gray-500);
+  white-space: nowrap; transition: all .15s;
+}
+.tab-btn:hover { color: var(--gray-900); background: var(--gray-50); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
 
-    /* ── PRICING ── */
-    #pricing-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 1rem; }
-    .proj-controls { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
-    .proj-controls label { font-size: 12px; color: var(--gray-500); }
-    .proj-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-bottom: 1rem; }
-    .proj-metric { background: var(--gray-100); border-radius: var(--radius-md); padding: .85rem; }
-    .proj-metric-lbl { font-size: 11px; color: var(--gray-500); margin-bottom: 3px; }
-    .proj-metric-val { font-size: 18px; font-weight: 500; }
-    .proj-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .proj-table th { text-align: left; padding: 6px 8px; font-weight: 500; font-size: 11px; color: var(--gray-500); border-bottom: 1px solid var(--gray-200); text-transform: uppercase; letter-spacing: .06em; }
+/* ── TAG CHIP ── */
+.chip {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 20px;
+}
 
-    /* ── FOOTER ── */
-    .footer { text-align: center; padding: 2rem; border-top: 1px solid var(--gray-200); font-size: 12px; color: var(--gray-500); }
+/* ── GRID UTILITIES ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.grid-auto-sm { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
-      .site-nav-links { display: none; }
-      #roadmap-phases { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
+/* ── FLEX UTILITIES ── */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.gap-1 { gap: 4px; } .gap-2 { gap: 8px; } .gap-3 { gap: 12px; } .gap-4 { gap: 16px; }
+.items-center { align-items: center; }
+.items-start  { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
 
-<!-- NAVIGATION -->
-<nav class="site-nav">
-  <a href="index.html" class="site-nav-logo">
-    <img src="assets/logo.svg" alt="PARAGON" width="28" height="28">
-    <span>PARA<em>GON</em></span>
-  </a>
-  <div class="site-nav-links">
-    <a href="#problema">Problema</a>
-    <a href="#modulos">Módulos</a>
-    <a href="#roles">Roles</a>
-    <a href="#flujo">Flujo</a>
-    <a href="#gantt">Gantt</a>
-    <a href="#pricing">Pricing</a>
-    <a href="deck.html" class="cta-link"><i class="ti ti-presentation"></i>&nbsp;Ver deck completo</a>
-  </div>
-</nav>
+/* ── DIVIDER ── */
+.divider { width: 1px; background: var(--gray-200); align-self: stretch; }
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-inner">
-    <span class="badge badge-blue"><i class="ti ti-industry"></i>Industria papelera · Forestal · Procesos continuos</span>
-    <h1 class="hero-title">PARA<span>GON</span></h1>
-    <p class="hero-sub">Plataforma integral de transferencia y preservación del conocimiento operacional industrial. Centraliza, estructura y potencia el saber técnico de tu organización.</p>
-    <div class="hero-cta">
-      <a href="deck.html" class="btn btn-primary"><i class="ti ti-presentation"></i>Ver deck completo</a>
-      <a href="#modulos" class="btn"><i class="ti ti-layout-grid"></i>Explorar módulos</a>
-    </div>
-    <div class="hero-stats">
-      <div><div class="stat-num">6</div><div class="stat-lbl">Roles definidos</div></div>
-      <div class="divider"></div>
-      <div><div class="stat-num">4</div><div class="stat-lbl">Módulos clave</div></div>
-      <div class="divider"></div>
-      <div><div class="stat-num">2</div><div class="stat-lbl">Etapas evolutivas</div></div>
-      <div class="divider"></div>
-      <div><div class="stat-num">∞</div><div class="stat-lbl">Continuidad operacional</div></div>
-    </div>
-  </div>
-</section>
+/* ── INFO BOX ── */
+.info-box {
+  background: var(--gray-100); border-radius: var(--radius-md);
+  padding: .85rem; font-size: 12px; color: var(--gray-500);
+  line-height: 1.6; display: flex; gap: 10px; align-items: flex-start;
+}
+.info-box i { font-size: 16px; color: var(--blue); flex-shrink: 0; margin-top: 1px; }
 
-<!-- PROBLEMA -->
-<section id="problema" class="page-section">
-  <div class="label" style="margin-bottom:.4rem;">El problema</div>
-  <div class="section-title" style="margin-bottom:.75rem;">¿Por qué existe PARAGON?</div>
-  <blockquote style="font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:300;font-style:italic;color:var(--gray-500);border-left:3px solid var(--blue);padding-left:1rem;margin-bottom:1.5rem;line-height:1.5;">
-    "Cuando el experto se jubila, se lleva décadas de conocimiento operacional que nadie documentó."
-  </blockquote>
-  <div id="problem-metrics"></div>
-  <div id="problem-symptoms"></div>
-</section>
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
 
-<!-- MÓDULOS -->
-<section id="modulos" class="page-section">
-  <div class="label" style="margin-bottom:.4rem;">La solución</div>
-  <div class="section-title" style="margin-bottom:1rem;">Módulos del sistema</div>
-  <div id="mod-grid"></div>
-  <div id="mod-detail"></div>
-</section>
-
-<!-- ROLES -->
-<section id="roles" class="page-section">
-  <div class="label" style="margin-bottom:.4rem;">Estructura organizacional</div>
-  <div class="section-title" style="margin-bottom:1rem;">Roles y permisos</div>
-  <div id="roles-grid"></div>
-  <div id="role-detail"></div>
-</section>
-
-<!-- FLUJO -->
-<section id="flujo" class="page-section">
-  <div class="label" style="margin-bottom:.4rem;">Control de calidad</div>
-  <div class="section-title" style="margin-bottom:1rem;">Flujo de aprobación</div>
-  <div id="flow-steps"></div>
-  <div class="label" style="margin-bottom:.6rem;">Reglas del flujo</div>
-  <div id="flow-rules"></div>
-</section>
-
-<!-- GANTT -->
-<section id="gantt" class="page-section">
-  <div class="label" style="margin-bottom:.4rem;">Plan de desarrollo</div>
-  <div class="section-title" style="margin-bottom:1rem;">Carta Gantt — 10 semanas</div>
-  <div class="gantt-wrap">
-    <div id="gantt-root"></div>
-  </div>
-  <div class="gantt-legend">
-    <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#85B7EB;"></div>Maqueta</div>
-    <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--blue);"></div>Desarrollo</div>
-    <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--purple);"></div>Módulo IA</div>
-    <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--green);"></div>Pruebas</div>
-  </div>
-</section>
-
-<!-- ROADMAP -->
-<section id="roadmap" class="page-section">
-  <div class="label" style="margin-bottom:.4rem;">Plan de desarrollo</div>
-  <div class="section-title" style="margin-bottom:1rem;">Roadmap</div>
-  <div id="roadmap-phases"></div>
-  <div class="info-box">
-    <i class="ti ti-eye"></i>
-    <div><strong style="color:var(--gray-900);font-weight:500;">Visión de PARAGON.</strong> La inteligencia artificial es la evolución natural del ecosistema construido en la Etapa 1. No es solo una herramienta de IA: es una plataforma integral de transferencia del conocimiento operacional.</div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="pricing" class="page-section">
-  <div class="label" style="margin-bottom:.4rem;">Modelo de negocio</div>
-  <div class="section-title" style="margin-bottom:1rem;">Planes SaaS</div>
-  <div id="pricing-plans"></div>
-
-  <div class="info-box" style="margin-bottom:1.25rem;">
-    <i class="ti ti-plus"></i>
-    <div><strong style="font-weight:500;color:var(--gray-900);">Add-ons:</strong> Onboarding e implementación +USD 1.500 (único), carga inicial de documentación +USD 500, capacitación de administradores +USD 300, usuarios adicionales +USD 8/usuario/mes.</div>
-  </div>
-
-  <div class="label" style="margin-bottom:.75rem;">Simulador de ingresos</div>
-  <div class="proj-controls">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <label>Starter</label>
-      <input type="range" min="0" max="8" value="2" step="1" id="sl-s" oninput="recalcProj()">
-      <span id="v-s" style="font-size:13px;font-weight:500;min-width:16px;">2</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <label>Professional</label>
-      <input type="range" min="0" max="8" value="2" step="1" id="sl-p" oninput="recalcProj()">
-      <span id="v-p" style="font-size:13px;font-weight:500;min-width:16px;">2</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <label>Enterprise</label>
-      <input type="range" min="0" max="5" value="1" step="1" id="sl-e" oninput="recalcProj()">
-      <span id="v-e" style="font-size:13px;font-weight:500;min-width:16px;">1</span>
-    </div>
-  </div>
-  <div class="proj-metrics">
-    <div class="proj-metric"><div class="proj-metric-lbl">MRR</div><div class="proj-metric-val" id="proj-mrr">—</div></div>
-    <div class="proj-metric"><div class="proj-metric-lbl">ARR</div><div class="proj-metric-val" id="proj-arr" style="color:var(--blue);">—</div></div>
-    <div class="proj-metric"><div class="proj-metric-lbl">Infraestructura</div><div class="proj-metric-val" id="proj-cost">—</div></div>
-    <div class="proj-metric"><div class="proj-metric-lbl">Margen bruto</div><div class="proj-metric-val" id="proj-margin" style="color:var(--green);">—</div></div>
-  </div>
-  <table class="proj-table">
-    <thead><tr><th>Escenario</th><th>Mix</th><th>MRR</th><th>ARR</th><th>Margen</th></tr></thead>
-    <tbody id="proj-tbody"></tbody>
-  </table>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  © 2025 PARAGON v1.0.0 · Plataforma de Conocimiento Industrial
-</footer>
-
-<script src="js/data.js"></script>
-<script src="js/deck.js"></script>
-</body>
-</html>
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .hide-mobile { display: none; }
+}
